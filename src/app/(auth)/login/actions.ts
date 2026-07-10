@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { LoginFormState } from "@/types/auth";
 import { loginSchemaForm } from "@/validations/auth-validation";
+import { revalidatePath } from "next/cache";
 import z from "zod";
 
 export async function login(
@@ -36,12 +37,12 @@ export async function login(
   });
 
   if (error) {
-    let message = "Terjadi kesalahan, silakan coba lagi";
+    let message = "An error occurred, please try again";
 
     if (error.message.includes("Invalid login credentials")) {
-      message = "Email atau password salah";
+      message = "Incorrect email or password";
     } else if (error.message.includes("Email not confirmed")) {
-      message = "Email belum diverifikasi, silakan cek inbox Anda";
+      message = "Email not verified, please check your inbox";
     }
 
     return {
@@ -52,6 +53,8 @@ export async function login(
       },
     };
   }
+
+  revalidatePath("/", "layout");
 
   return {
     status: "success",

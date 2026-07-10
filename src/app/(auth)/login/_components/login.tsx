@@ -18,6 +18,8 @@ import { useForm } from "react-hook-form";
 import { login } from "../actions";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
+import { toast } from "sonner";
 
 const initialStateLogin: LoginFormState = {};
 
@@ -45,40 +47,65 @@ export default function Login() {
   useEffect(() => {
     if (loginState.status === "success") {
       router.push("/home");
-      console.log("Login Berhasil");
+      toast.success("Login successful!", {
+        description: "Welcome back! You have successfully logged in",
+        descriptionClassName: "!text-black",
+      });
+    }
+    if (loginState?.status === "error") {
+      toast.error("Login Failed", {
+        description: loginState.errors?._form?.[0],
+        descriptionClassName: "!text-black",
+      });
     }
   }, [loginState, router]);
 
   return (
     <Card>
       <CardHeader className="text-center">
-        <CardTitle className="text-xl">Masuk</CardTitle>
-        <CardDescription>
-          Selamat datang kembali! Silakan masuk ke akun Anda
+        <CardTitle className="mb-2 text-start text-4xl font-semibold text-emerald-500">
+          Login
+        </CardTitle>
+        <CardDescription className="text-start">
+          Please login to explore our features.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form
           onSubmit={onSubmit}
-          className="space-y-4 flex flex-col items-center"
+          className="flex flex-col items-center space-y-4"
         >
           <FormInput
             name="email"
             control={control}
             label="Email"
             type="email"
-            placeholder="Masukkan Email"
+            placeholder="Enter Email"
           />
           <FormInput
             name="password"
             control={control}
             label="Password"
             type="password"
-            placeholder="Masukkan Password"
+            placeholder="Enter Password"
           />
-          <Button type="submit" className="w-full mt-3">
-            {isPendingLogin ? <Loader2 className="animate-spin" /> : "Masuk"}
+          <Button
+            type="submit"
+            className="mt-3 w-full bg-emerald-500 hover:bg-emerald-600"
+          >
+            {isPendingLogin ? <Loader2 className="animate-spin" /> : "Sign In"}
           </Button>
+          <div>
+            <p className="text-muted-foreground text-sm">
+              {"Don't have an account?"}{" "}
+              <Link
+                href="/register"
+                className="text-emerald-500 hover:underline"
+              >
+                Sign up
+              </Link>
+            </p>
+          </div>
         </form>
       </CardContent>
     </Card>
