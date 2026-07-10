@@ -10,19 +10,44 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { INITIAL_LOGIN_FORM } from "@/constants/auth";
+import { LoginFormState } from "@/types/auth";
 import { LoginForm, loginSchemaForm } from "@/validations/auth-validation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { login } from "../actions";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
+
+const initialStateLogin: LoginFormState = {};
 
 export default function Login() {
+  const router = useRouter();
   const { handleSubmit, control } = useForm<LoginForm>({
     resolver: zodResolver(loginSchemaForm),
     defaultValues: INITIAL_LOGIN_FORM,
   });
 
+  const [loginState, loginAction, isPendingLogin] = useActionState(
+    login,
+    initialStateLogin,
+  );
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    const formData = new FormData();
+    Object.entries(data).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    startTransition(() => loginAction(formData));
   });
+
+  useEffect(() => {
+    if (loginState.status === "success") {
+      router.push("/home");
+      console.log("Login Berhasil");
+    }
+  }, [loginState, router]);
 
   return (
     <Card>
@@ -52,8 +77,7 @@ export default function Login() {
             placeholder="Masukkan Password"
           />
           <Button type="submit" className="w-full mt-3">
-            {/* {isPending ? <Loader2 className="animate-spin" /> : "Sign Up"} */}
-            Sign Up
+            {isPendingLogin ? <Loader2 className="animate-spin" /> : "Masuk"}
           </Button>
         </form>
       </CardContent>

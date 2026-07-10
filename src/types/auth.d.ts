@@ -8,3 +8,12 @@ export type RegisterFormState = {
     _form?: string[];
   };
 };
+
+export type LoginFormState = {
+  status?: string;
+  errors?: {
+    email?: string[];
+    password?: string[];
+    _form?: string[];
+  };
+};

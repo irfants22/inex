@@ -2,11 +2,12 @@ import { environment } from "@/configs/environment";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
-// const PUBLIC_PATHS = ["/login", "/register"];
+const PUBLIC_PATHS = ["/login", "/register"];
 
-// function isPublicPath(pathname: string) {
-//   return PUBLIC_PATHS.some((path) => pathname.startsWith(path));
-// }
+function isPublicPath(pathname: string) {
+  if (pathname === "/") return true;
+  return PUBLIC_PATHS.some((path) => pathname.startsWith(path));
+}
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -41,22 +42,22 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  await supabase.auth.getClaims();
+  const { data, error } = await supabase.auth.getClaims();
 
-  // const user = data?.claims && !error;
-  // const { pathname } = request.nextUrl;
+  const user = data?.claims && !error;
+  const { pathname } = request.nextUrl;
 
-  // if (!user && !isPublicPath(pathname)) {
-  //   const redirectUrl = request.nextUrl.clone();
-  //   redirectUrl.pathname = "/login";
-  //   return NextResponse.redirect(redirectUrl);
-  // }
+  if (!user && !isPublicPath(pathname)) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/login";
+    return NextResponse.redirect(redirectUrl);
+  }
 
-  // if (user && isPublicPath(pathname)) {
-  //   const redirectUrl = request.nextUrl.clone();
-  //   redirectUrl.pathname = "/";
-  //   return NextResponse.redirect(redirectUrl);
-  // }
+  if (user && isPublicPath(pathname)) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/home";
+    return NextResponse.redirect(redirectUrl);
+  }
 
   return supabaseResponse;
 }
