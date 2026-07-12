@@ -1,7 +1,9 @@
+import BalanceCard from "./_components/balance-card";
+
 export default function Home() {
   return (
-    <div className="flex h-svh items-center justify-center bg-blue-200">
-      <div className="flex gap-2">SCREEN</div>
+    <div className="flex justify-center p-4">
+      <BalanceCard />
     </div>
   );
 }
