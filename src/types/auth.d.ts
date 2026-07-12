@@ -1,3 +1,5 @@
+import { profiles } from "@/db/schema";
+
 export type RegisterFormState = {
   status?: string;
   errors?: {
@@ -17,3 +19,5 @@ export type LoginFormState = {
     _form?: string[];
   };
 };
+
+export type Profile = typeof profiles.$inferSelect;
