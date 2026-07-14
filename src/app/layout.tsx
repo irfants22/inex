@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/sonner";
 import UserStoreProvider from "@/providers/user-store-provider";
 import { getProfile, getUser } from "./actions/auth-actions";
+import ReactQueryProvider from "@/providers/react-query-provider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -44,10 +45,12 @@ export default async function RootLayout({
       )}
     >
       <body className="flex min-h-full flex-col">
-        <UserStoreProvider user={user} profile={profile}>
-          <main>{children}</main>
-          <Toaster />
-        </UserStoreProvider>
+        <ReactQueryProvider>
+          <UserStoreProvider user={user} profile={profile}>
+            <main>{children}</main>
+            <Toaster />
+          </UserStoreProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

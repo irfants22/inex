@@ -16,6 +16,12 @@ export async function getUser() {
   return user;
 }
 
+export async function requireUser() {
+  const user = await getUser();
+  if (!user) redirect("/login");
+  return user;
+}
+
 export async function getProfile() {
   const user = await getUser();
   if (!user) return null;
