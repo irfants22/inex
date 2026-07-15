@@ -1,12 +1,51 @@
 "use server";
 
-import { TransactionFormState } from "@/types/transaction";
 import { requireUser } from "./auth-actions";
+import { db } from "@/db";
+import { categories, transactions } from "@/db/schema";
+import { and, desc, eq, gte, lt } from "drizzle-orm";
+import { TransactionFormState } from "@/types/transaction";
 import { transactionFormSchema } from "@/validations/transaction-validation";
 import z from "zod";
-import { db } from "@/db";
-import { transactions } from "@/db/schema";
 import { revalidatePath } from "next/cache";
+import { format } from "date-fns";
+
+export async function getTransactions(
+  month: number,
+  year: number,
+  type: string,
+) {
+  const user = await requireUser();
+
+  const startDate = new Date(year, month - 1, 1);
+  const endDate = new Date(year, month, 1);
+
+  const conditions = [
+    eq(transactions.userId, user.id),
+    gte(transactions.transactionDate, format(startDate, "yyyy-MM-dd")),
+    lt(transactions.transactionDate, format(endDate, "yyyy-MM-dd")),
+  ];
+
+  if (type !== "all") {
+    conditions.push(eq(categories.type, type as "income" | "expense"));
+  }
+
+  return db
+    .select({
+      id: transactions.id,
+      amount: transactions.amount,
+      note: transactions.note,
+      transactionDate: transactions.transactionDate,
+      categoryName: categories.name,
+      categoryType: categories.type,
+      categoryIcon: categories.icon,
+      categoryColor: categories.color,
+    })
+    .from(transactions)
+    .innerJoin(categories, eq(transactions.categoryId, categories.id))
+    .where(and(...conditions))
+    .orderBy(desc(transactions.transactionDate), desc(transactions.id));
+}
 
 export async function createTransaction(
   prevState: TransactionFormState,

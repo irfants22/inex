@@ -8,3 +8,14 @@ export type TransactionFormState = {
     _form?: string[];
   };
 };
+
+export type TransactionData = {
+  id: string;
+  amount: string;
+  note?: string | null;
+  transactionDate: string;
+  categoryName: string;
+  categoryType: "income" | "expense";
+  categoryIcon: string;
+  categoryColor: string;
+};
