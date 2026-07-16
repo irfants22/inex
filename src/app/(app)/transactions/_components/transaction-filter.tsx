@@ -107,7 +107,7 @@ export function TransactionFilter() {
           </Field>
           {/* type */}
           <Field>
-            <FieldLabel htmlFor="type">Type</FieldLabel>
+            <FieldLabel htmlFor="type">Filter By</FieldLabel>
             <Select
               value={String(currentType)}
               onValueChange={(type) =>

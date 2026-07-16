@@ -1,4 +1,4 @@
-import { MoveDown, MoveUp, Wallet } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, Wallet } from "lucide-react";
 
 export default function BalanceCard() {
   return (
@@ -23,7 +23,7 @@ export default function BalanceCard() {
         <div className="flex flex-col justify-center gap-1 p-2">
           <div className="flex items-center gap-1">
             <div className="h-fit w-fit rounded-full bg-black/20 p-1 text-white">
-              <MoveUp size={12} />
+              <ArrowUpRight size={12} />
             </div>
             <p className="text-xs font-normal text-white">This Month Income</p>
           </div>
@@ -35,7 +35,7 @@ export default function BalanceCard() {
         <div className="flex flex-col justify-center gap-1 p-2">
           <div className="flex items-center gap-1">
             <div className="h-fit w-fit rounded-full bg-black/20 p-1 text-white">
-              <MoveDown size={12} />
+              <ArrowDownRight size={12} />
             </div>
             <p className="text-xs font-normal text-white">This Month Expense</p>
           </div>

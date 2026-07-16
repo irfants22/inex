@@ -95,11 +95,11 @@ export default function TransactionHistoryCard({
                       <div className="flex flex-col justify-between">
                         <p className="font-medium">{trx.categoryName}</p>
                         <div className="flex items-center justify-center gap-1">
-                          <p className="text-xs capitalize">
+                          <p className="text-muted-foreground text-xs capitalize">
                             {trx.categoryType}
                           </p>{" "}
                           ·{" "}
-                          <p className="max-w-40 truncate text-xs">
+                          <p className="text-muted-foreground max-w-40 truncate text-xs">
                             {trx.note || "Other"}
                           </p>
                         </div>
