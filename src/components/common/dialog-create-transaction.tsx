@@ -95,7 +95,8 @@ export default function DialogCreateTransaction({
           name="categoryId"
           selectItem={(categoriesData ?? []).map((category: Category) => ({
             value: `${category.id}`,
-            label: `${category.name} - ${category.icon}`,
+            label: `${category.name} - ${category.type}`,
+            icon: `${category.icon}`,
           }))}
         />
         <FormDate control={control} name="transactionDate" label="Date" />

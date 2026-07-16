@@ -12,5 +12,5 @@ export async function getCategories() {
     .select()
     .from(categories)
     .where(eq(categories.userId, user.id))
-    .orderBy(categories.type);
+    .orderBy(categories.type, categories.name);
 }

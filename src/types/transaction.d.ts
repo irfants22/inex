@@ -14,6 +14,7 @@ export type TransactionData = {
   amount: string;
   note?: string | null;
   transactionDate: string;
+  categoryId: string;
   categoryName: string;
   categoryType: "income" | "expense";
   categoryIcon: string;

@@ -36,6 +36,7 @@ export async function getTransactions(
       amount: transactions.amount,
       note: transactions.note,
       transactionDate: transactions.transactionDate,
+      categoryId: categories.id,
       categoryName: categories.name,
       categoryType: categories.type,
       categoryIcon: categories.icon,
@@ -84,6 +85,66 @@ export async function createTransaction(
       note: note || null,
       transactionDate,
     });
+  } catch (error) {
+    console.error(error);
+    return {
+      status: "error",
+      errors: {
+        ...prevState.errors,
+        _form: ["Failed to save transaction, please try again"],
+      },
+    };
+  }
+
+  revalidatePath("/home", "layout");
+
+  return { status: "success" };
+}
+
+export async function updateTransaction(
+  prevState: TransactionFormState,
+  formData: FormData,
+): Promise<TransactionFormState> {
+  const user = await requireUser();
+
+  const validatedFields = transactionFormSchema.safeParse({
+    categoryId: formData.get("categoryId"),
+    amount: formData.get("amount"),
+    note: formData.get("note"),
+    transactionDate: formData.get("transactionDate"),
+  });
+
+  if (!validatedFields.success) {
+    const tree = z.treeifyError(validatedFields.error);
+    return {
+      status: "error",
+      errors: {
+        categoryId: tree.properties?.categoryId?.errors,
+        amount: tree.properties?.amount?.errors,
+        note: tree.properties?.note?.errors,
+        transactionDate: tree.properties?.transactionDate?.errors,
+        _form: tree.errors,
+      },
+    };
+  }
+
+  const { categoryId, amount, note, transactionDate } = validatedFields.data;
+
+  try {
+    await db
+      .update(transactions)
+      .set({
+        categoryId,
+        amount: String(amount),
+        note: note || null,
+        transactionDate,
+      })
+      .where(
+        and(
+          eq(transactions.userId, user.id),
+          eq(transactions.id, formData.get("id") as string),
+        ),
+      );
   } catch (error) {
     console.error(error);
     return {

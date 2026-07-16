@@ -10,12 +10,13 @@ import {
   SelectValue,
 } from "../ui/select";
 import { cn } from "@/lib/utils";
+import { CategoryIcon } from "./category-icon";
 
 interface FormSelectProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
   label: string;
-  selectItem: { value: string; label: string }[];
+  selectItem: { value: string; label: string; icon?: string }[];
 }
 
 export default function FormSelect<T extends FieldValues>(
@@ -31,9 +32,7 @@ export default function FormSelect<T extends FieldValues>(
         field: { onChange, value, ...field },
         fieldState: { error },
       }) => {
-        const selectedLabel = selectItem.find(
-          (item) => item.value === value,
-        )?.label;
+        const selectedLabel = selectItem.find((item) => item.value === value);
 
         return (
           <Field data-invalid={!!error}>
@@ -44,8 +43,21 @@ export default function FormSelect<T extends FieldValues>(
                   "border-destructive focus:ring-destructive": !!error,
                 })}
               >
-                <SelectValue placeholder={`Select ${label}`}>
-                  {selectedLabel}
+                <SelectValue
+                  placeholder={`Select ${label}`}
+                  className="capitalize"
+                >
+                  {selectedLabel && (
+                    <>
+                      {selectedLabel.icon && (
+                        <CategoryIcon
+                          name={selectedLabel.icon}
+                          className="mr-0.5"
+                        />
+                      )}
+                      {selectedLabel.label}
+                    </>
+                  )}
                 </SelectValue>
               </SelectTrigger>
               <SelectContent>
@@ -53,10 +65,13 @@ export default function FormSelect<T extends FieldValues>(
                   <SelectLabel>{label}</SelectLabel>
                   {selectItem.map((item) => (
                     <SelectItem
-                      key={item.label}
+                      key={item.value}
                       value={item.value}
                       className="capitalize"
                     >
+                      {item.icon && (
+                        <CategoryIcon name={item.icon} className="mr-0.5" />
+                      )}
                       {item.label}
                     </SelectItem>
                   ))}

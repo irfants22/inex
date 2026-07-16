@@ -11,6 +11,10 @@ import { CATEGORY_ICON_STYLES } from "@/constants/icon";
 import { cn } from "@/lib/utils";
 import { TransactionData } from "@/types/transaction";
 import { ChevronDownIcon } from "lucide-react";
+import { useState } from "react";
+import DialogUpdateTransaction from "./dialog-update-transaction";
+import { useSearchParams } from "next/navigation";
+import { MONTH_SELECT_ITEMS } from "@/constants/transaction";
 
 interface TransactionHistoryCardProps {
   date: string;
@@ -22,8 +26,23 @@ export default function TransactionHistoryCard({
 }: {
   data: TransactionHistoryCardProps[];
 }) {
+  const params = useSearchParams();
+  const [open, setOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<TransactionData | null>(null);
+
+  const now = new Date();
+  const year = params.get("year") || now.getFullYear();
+  const month = Number(params.get("month")) || now.getMonth() + 1;
+  const monthName = MONTH_SELECT_ITEMS.find(
+    (m) => m.value === String(month),
+  )?.label;
+
   return (
     <div className="w-full space-y-4 rounded-lg bg-transparent">
+      <div>
+        <p className="ml-1 text-lg font-medium">{`Transaction Summary for ${monthName} ${year}`}</p>
+      </div>
       {data.map((group) => (
         <Collapsible
           key={group.date}
@@ -52,7 +71,11 @@ export default function TransactionHistoryCard({
                 return (
                   <div
                     key={trx.id}
-                    className="item-center flex w-full justify-center gap-2 rounded-sm bg-white p-3"
+                    className="item-center hover:bg-muted flex w-full cursor-pointer justify-center gap-2 rounded-sm bg-white p-3 transition hover:translate-y-0.5"
+                    onClick={() => {
+                      setSelectedTransaction(trx);
+                      setOpen(true);
+                    }}
                   >
                     <div className="flex items-center justify-center">
                       <div
@@ -102,6 +125,11 @@ export default function TransactionHistoryCard({
           </CollapsibleContent>
         </Collapsible>
       ))}
+      <DialogUpdateTransaction
+        open={open}
+        setOpen={setOpen}
+        currentData={selectedTransaction}
+      />
     </div>
   );
 }
