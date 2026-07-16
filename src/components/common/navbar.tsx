@@ -2,44 +2,64 @@
 
 import { userStore } from "@/stores/user-store";
 import { Button } from "../ui/button";
-import { LogIn, LogOut } from "lucide-react";
+import { LogIn, LogOut, Wallet } from "lucide-react";
 import { logout } from "@/app/actions/auth-actions";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 
 export default function Navbar() {
   const profile = userStore((state) => state.profile);
   const profileName = profile?.fullName.split(" ")[0] || "User";
+
   return (
-    <header className="sticky top-0 h-12 w-full bg-emerald-500 px-4 py-7">
-      <nav className="flex h-full w-full items-center justify-between">
-        <div>
-          <p className="text-lg font-medium text-white">
-            <span className="text-lg font-semibold text-black">INEX</span>
-            {profile && (
-              <span className="text-lg font-semibold text-black"> | </span>
-            )}
-            {profile && `Hi ${profileName}!`}
-          </p>
+    <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-md">
+      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
+        <Link
+          href="/"
+          className="group flex items-center gap-2.5 transition-all"
+        >
+          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 transition-transform group-hover:scale-105">
+            <Wallet className="size-5" />
+          </div>
+          <span className="text-xl font-bold tracking-tight">
+            IN<span className="text-emerald-500">EX</span>
+          </span>
+        </Link>
+
+        <div className="flex items-center gap-4">
+          {profile && (
+            <div className="flex items-center gap-2.5 rounded-full border border-slate-200 bg-slate-50 py-1 pr-1.5 pl-3 shadow-2xs">
+              <span className="text-muted-foreground text-xs font-medium">
+                Hi,{" "}
+                <span className="font-semibold text-black">{profileName}</span>
+              </span>
+              <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-500 text-xs font-semibold text-white">
+                {profileName.charAt(0).toUpperCase()}
+              </div>
+            </div>
+          )}
+
+          {profile ? (
+            <Button
+              size="sm"
+              variant="outline"
+              className="cursor-pointer gap-1.5 border-slate-200 transition-colors hover:border-red-200 hover:bg-rose-50 hover:text-rose-500"
+              onClick={() => logout()}
+            >
+              <LogOut className="size-4" />
+              <span>Logout</span>
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              className="cursor-pointer gap-1.5 bg-emerald-500 text-white shadow-sm shadow-emerald-500/10 transition-all hover:bg-emerald-600 hover:shadow-emerald-500/20"
+              onClick={() => redirect("/login")}
+            >
+              <LogIn className="size-4" />
+              <span>Login</span>
+            </Button>
+          )}
         </div>
-        {profile ? (
-          <Button
-            size="sm"
-            className="rounded-md bg-white text-emerald-500 hover:bg-emerald-600 hover:text-white"
-            onClick={() => logout()}
-          >
-            <LogOut />
-            <p className="ml-1 text-sm font-normal">Logout</p>
-          </Button>
-        ) : (
-          <Button
-            size="sm"
-            className="rounded-md bg-white text-emerald-500 hover:bg-emerald-600 hover:text-white"
-            onClick={() => redirect("/login")}
-          >
-            <LogIn />
-            <p className="ml-1 text-sm font-normal">Login</p>
-          </Button>
-        )}
       </nav>
     </header>
   );
