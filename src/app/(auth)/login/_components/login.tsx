@@ -47,7 +47,7 @@ export default function Login() {
   useEffect(() => {
     if (loginState.status === "success") {
       router.push("/home");
-      toast.success("Login successful!", {
+      toast.success("Login successful", {
         description: "Welcome back! You have successfully logged in",
         descriptionClassName: "!text-black",
       });

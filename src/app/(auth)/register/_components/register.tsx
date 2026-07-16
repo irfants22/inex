@@ -50,7 +50,7 @@ export default function Register() {
   useEffect(() => {
     if (registerState.status === "success") {
       router.push("/login");
-      toast.success("Registration successful!", {
+      toast.success("Registration successful", {
         description: "Please check your email to verify your account",
         descriptionClassName: "!text-black",
       });
