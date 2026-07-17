@@ -6,14 +6,22 @@ import { LogIn, LogOut, Wallet } from "lucide-react";
 import { logout } from "@/app/actions/auth-actions";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { SidebarTrigger } from "../ui/sidebar";
 
-export default function Navbar() {
+type NavbarProps = {
+  showSidebarTrigger?: boolean;
+};
+
+export default function Navbar({ showSidebarTrigger = false }: NavbarProps) {
   const profile = userStore((state) => state.profile);
   const profileName = profile?.fullName.split(" ")[0] || "User";
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-white/80 backdrop-blur-md">
-      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
+    <header className="sticky top-0 z-50 flex w-full items-center border-b border-slate-200/60 bg-white/80 backdrop-blur-md">
+      <div className="w-fit">
+        {showSidebarTrigger && <SidebarTrigger className="cursor-pointer" />}
+      </div>
+      <nav className="mx-auto flex h-16 w-full max-w-6xl flex-1 items-center justify-between px-2">
         <Link
           href="/"
           className="group flex items-center gap-2.5 transition-all"
