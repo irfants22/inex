@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import CategoryList from "./category-list";
 import { getCategories } from "@/app/actions/category-actions";
+
+import CategoryHeader from "./category-header";
 
 export default async function Category({
   searchParams,
@@ -21,18 +21,7 @@ export default async function Category({
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 p-4">
-      <div className="flex w-full flex-wrap items-center justify-between gap-y-6 rounded-lg px-4">
-        <div>
-          <h1 className="text-2xl leading-tight font-medium">Categories</h1>
-          <p className="text-sm">Manage your income and expense categories.</p>
-        </div>
-        <div>
-          <Button className="rounded-lg bg-emerald-500 px-3 py-5 text-white hover:bg-emerald-600/80">
-            <Plus className="size-4" />
-            New Category
-          </Button>
-        </div>
-      </div>
+      <CategoryHeader />
       <CategoryList data={groupedCategories} />
     </div>
   );

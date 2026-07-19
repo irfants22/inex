@@ -27,6 +27,7 @@ import { createTransaction } from "@/app/actions/transaction-actions";
 import { TransactionFormState } from "@/types/transaction";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { CategoryIcon } from "./category-icon";
 
 const initialStateTransaction: TransactionFormState = {};
 
@@ -96,7 +97,9 @@ export default function DialogCreateTransaction({
           selectItem={(categoriesData ?? []).map((category: Category) => ({
             value: `${category.id}`,
             label: `${category.name} - ${category.type}`,
-            icon: `${category.icon}`,
+            renderItem: (
+              <CategoryIcon name={category.icon} className="mr-0.5" />
+            ),
           }))}
         />
         <FormDate control={control} name="transactionDate" label="Date" />

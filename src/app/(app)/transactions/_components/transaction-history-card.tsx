@@ -71,7 +71,7 @@ export default function TransactionHistoryCard({
                 return (
                   <div
                     key={trx.id}
-                    className="item-center hover:bg-muted flex w-full cursor-pointer justify-center gap-2 rounded-sm bg-white p-3 transition hover:translate-y-0.5"
+                    className="item-center hover:bg-muted flex w-full cursor-pointer justify-center gap-2 rounded-sm bg-white p-3 transition"
                     onClick={() => {
                       setSelectedTransaction(trx);
                       setOpen(true);

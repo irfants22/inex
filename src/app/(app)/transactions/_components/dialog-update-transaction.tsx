@@ -1,5 +1,6 @@
 import { getCategories } from "@/app/actions/category-actions";
 import { updateTransaction } from "@/app/actions/transaction-actions";
+import { CategoryIcon } from "@/components/common/category-icon";
 import FormDate from "@/components/common/form-date";
 import FormInput from "@/components/common/form-input";
 import FormSelect from "@/components/common/form-select";
@@ -114,7 +115,9 @@ export default function DialogUpdateTransaction({
             selectItem={(categoriesData ?? []).map((category: Category) => ({
               value: `${category.id}`,
               label: `${category.name} - ${category.type}`,
-              icon: `${category.icon}`,
+              renderItem: (
+                <CategoryIcon name={category.icon} className="mr-0.5" />
+              ),
             }))}
           />
           <FormDate control={control} name="transactionDate" label="Date" />

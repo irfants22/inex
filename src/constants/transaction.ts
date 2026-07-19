@@ -1,3 +1,4 @@
+import { TransactionFormInput } from "@/validations/transaction-validation";
 import { format } from "date-fns";
 
 export const MONTH_SELECT_ITEMS = [
@@ -21,7 +22,7 @@ export const TRANSACTION_TYPES_SELECT_ITEMS = [
   { value: "expense", label: "Expense" },
 ];
 
-export const INITIAL_TRANSACTION_FORM = {
+export const INITIAL_TRANSACTION_FORM: TransactionFormInput = {
   categoryId: "",
   amount: 0,
   note: "",

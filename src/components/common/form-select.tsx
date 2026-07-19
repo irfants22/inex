@@ -10,13 +10,13 @@ import {
   SelectValue,
 } from "../ui/select";
 import { cn } from "@/lib/utils";
-import { CategoryIcon } from "./category-icon";
+import { ReactNode } from "react";
 
 interface FormSelectProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
   label: string;
-  selectItem: { value: string; label: string; icon?: string }[];
+  selectItem: { value: string; label: string; renderItem?: ReactNode }[];
 }
 
 export default function FormSelect<T extends FieldValues>(
@@ -49,12 +49,7 @@ export default function FormSelect<T extends FieldValues>(
                 >
                   {selectedLabel && (
                     <>
-                      {selectedLabel.icon && (
-                        <CategoryIcon
-                          name={selectedLabel.icon}
-                          className="mr-0.5"
-                        />
-                      )}
+                      {selectedLabel.renderItem && selectedLabel.renderItem}
                       {selectedLabel.label}
                     </>
                   )}
@@ -69,9 +64,7 @@ export default function FormSelect<T extends FieldValues>(
                       value={item.value}
                       className="capitalize"
                     >
-                      {item.icon && (
-                        <CategoryIcon name={item.icon} className="mr-0.5" />
-                      )}
+                      {item.renderItem && item.renderItem}
                       {item.label}
                     </SelectItem>
                   ))}
