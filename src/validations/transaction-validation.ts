@@ -12,4 +12,3 @@ export const transactionFormSchema = z.object({
 });
 
 export type TransactionFormInput = z.input<typeof transactionFormSchema>;
-export type TransactionFormOutput = z.output<typeof transactionFormSchema>;

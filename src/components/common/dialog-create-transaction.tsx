@@ -20,7 +20,7 @@ import { INITIAL_TRANSACTION_FORM } from "@/constants/transaction";
 import FormSelect from "./form-select";
 import FormDate from "./form-date";
 import { useQuery } from "@tanstack/react-query";
-import { Category } from "@/validations/category-validation";
+
 import { getCategories } from "@/app/actions/category-actions";
 import { startTransition, useActionState, useEffect } from "react";
 import { createTransaction } from "@/app/actions/transaction-actions";
@@ -97,7 +97,7 @@ export default function DialogCreateTransaction({
           control={control}
           label="Category"
           name="categoryId"
-          selectItem={(categoriesData ?? []).map((category: Category) => ({
+          selectItem={(categoriesData ?? []).map((category) => ({
             value: `${category.id}`,
             label: `${category.name} - ${category.type}`,
             renderItem: (

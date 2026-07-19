@@ -15,7 +15,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { TransactionData, TransactionFormState } from "@/types/transaction";
-import { Category } from "@/validations/category-validation";
+
 import {
   TransactionFormInput,
   transactionFormSchema,
@@ -112,7 +112,7 @@ export default function DialogUpdateTransaction({
             control={control}
             label="Category"
             name="categoryId"
-            selectItem={(categoriesData ?? []).map((category: Category) => ({
+            selectItem={(categoriesData ?? []).map((category) => ({
               value: `${category.id}`,
               label: `${category.name} - ${category.type}`,
               renderItem: (
