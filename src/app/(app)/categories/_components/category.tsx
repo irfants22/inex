@@ -21,7 +21,7 @@ export default async function Category({
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 p-4">
-      <div className="flex w-full items-center justify-between rounded-lg px-4 py-2">
+      <div className="flex w-full flex-wrap items-center justify-between gap-y-6 rounded-lg px-4">
         <div>
           <h1 className="text-2xl leading-tight font-medium">Categories</h1>
           <p className="text-sm">Manage your income and expense categories.</p>

@@ -26,18 +26,18 @@ export default function Navbar({ showSidebarTrigger = false }: NavbarProps) {
           href="/"
           className="group flex items-center gap-2.5 transition-all"
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-500 text-white shadow-sm shadow-emerald-500/20 transition-transform group-hover:scale-105">
+          <div className="flex items-center justify-center rounded-lg bg-emerald-500 p-2 text-white shadow-sm shadow-emerald-500/20 transition-transform group-hover:scale-105">
             <Wallet className="size-5" />
           </div>
-          <span className="text-xl font-bold tracking-tight">
+          <span className="text-lg font-bold tracking-tight">
             IN<span className="text-emerald-500">EX</span>
           </span>
         </Link>
 
         <div className="flex items-center gap-4">
           {profile && (
-            <div className="flex items-center gap-2.5 rounded-full border border-slate-200 bg-slate-50 py-1 pr-1.5 pl-3 shadow-2xs">
-              <span className="text-muted-foreground text-xs font-medium">
+            <div className="flex items-center gap-2.5 rounded-full border border-slate-200 bg-slate-50 py-1 pr-1.5 pl-1.5 shadow-2xs sm:pl-3">
+              <span className="text-muted-foreground hidden text-xs font-medium sm:block">
                 Hi,{" "}
                 <span className="font-semibold text-black">{profileName}</span>
               </span>
@@ -55,7 +55,7 @@ export default function Navbar({ showSidebarTrigger = false }: NavbarProps) {
               onClick={() => logout()}
             >
               <LogOut className="size-4" />
-              <span>Logout</span>
+              <span className="hidden sm:inline-block">Logout</span>
             </Button>
           ) : (
             <Button
