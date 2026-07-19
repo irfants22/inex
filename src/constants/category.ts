@@ -7,7 +7,7 @@ export const INITIAL_CATEGORY_FORM: CategoryFormInput = {
   color: "",
 };
 
-export const CATEGORY_TYPES_SELECT_ITEMS = [
+export const CATEGORY_TYPE_SELECT_ITEMS = [
   { value: "income", label: "Income" },
   { value: "expense", label: "Expense" },
 ];

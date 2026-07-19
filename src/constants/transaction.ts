@@ -16,7 +16,7 @@ export const MONTH_SELECT_ITEMS = [
   { value: "12", label: "December" },
 ];
 
-export const TRANSACTION_TYPES_SELECT_ITEMS = [
+export const TRANSACTION_TYPE_SELECT_ITEMS = [
   { value: "all", label: "All" },
   { value: "income", label: "Income" },
   { value: "expense", label: "Expense" },

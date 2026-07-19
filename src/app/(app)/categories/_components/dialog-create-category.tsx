@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import {
-  CATEGORY_TYPES_SELECT_ITEMS,
+  CATEGORY_TYPE_SELECT_ITEMS,
   INITIAL_CATEGORY_FORM,
 } from "@/constants/category";
 import {
@@ -46,7 +46,7 @@ export default function DialogCreateCategory({
     defaultValues: INITIAL_CATEGORY_FORM,
   });
 
-  const [categoryState, categoryCreateAction, isPendingCreateCategory] =
+  const [createCategoryState, categoryCreateAction, isPendingCreateCategory] =
     useActionState(createCategory, initialStateCategory);
 
   const onSubmit = handleSubmit((data) => {
@@ -59,18 +59,18 @@ export default function DialogCreateCategory({
   });
 
   useEffect(() => {
-    if (categoryState.status === "success") {
+    if (createCategoryState.status === "success") {
       toast.success("Successfully added category");
       reset();
       setOpen(false);
     }
-    if (categoryState?.status === "error") {
+    if (createCategoryState?.status === "error") {
       toast.error("Failed to add category", {
-        description: categoryState.errors?._form?.[0],
+        description: createCategoryState.errors?._form?.[0],
         descriptionClassName: "!text-black",
       });
     }
-  }, [categoryState, reset, setOpen]);
+  }, [createCategoryState, reset, setOpen]);
 
   return (
     <DialogContent className="sm:max-w-sm">
@@ -94,7 +94,7 @@ export default function DialogCreateCategory({
           control={control}
           label="Type"
           name="type"
-          selectItem={(CATEGORY_TYPES_SELECT_ITEMS ?? []).map((category) => ({
+          selectItem={(CATEGORY_TYPE_SELECT_ITEMS ?? []).map((category) => ({
             value: `${category.value}`,
             label: `${category.label}`,
           }))}

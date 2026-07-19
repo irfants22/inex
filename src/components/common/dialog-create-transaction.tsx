@@ -41,8 +41,11 @@ export default function DialogCreateTransaction({
     defaultValues: INITIAL_TRANSACTION_FORM,
   });
 
-  const [transactionState, transactionAction, isPendingTransaction] =
-    useActionState(createTransaction, initialStateTransaction);
+  const [
+    createTransactionState,
+    createTransactionAction,
+    isPendingCreateTransaction,
+  ] = useActionState(createTransaction, initialStateTransaction);
 
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
@@ -50,7 +53,7 @@ export default function DialogCreateTransaction({
       formData.append(key, String(value));
     });
 
-    startTransition(() => transactionAction(formData));
+    startTransition(() => createTransactionAction(formData));
   });
 
   const { data: categoriesData } = useQuery({
@@ -59,18 +62,18 @@ export default function DialogCreateTransaction({
   });
 
   useEffect(() => {
-    if (transactionState.status === "success") {
+    if (createTransactionState.status === "success") {
       toast.success("Successfully added transaction");
       reset();
       setOpen(false);
     }
-    if (transactionState?.status === "error") {
+    if (createTransactionState?.status === "error") {
       toast.error("Failed to add transaction", {
-        description: transactionState.errors?._form?.[0],
+        description: createTransactionState.errors?._form?.[0],
         descriptionClassName: "!text-black",
       });
     }
-  }, [transactionState, reset, setOpen]);
+  }, [createTransactionState, reset, setOpen]);
 
   return (
     <DialogContent className="sm:max-w-sm">
@@ -115,9 +118,9 @@ export default function DialogCreateTransaction({
           <Button
             type="submit"
             className="bg-emerald-500 hover:bg-emerald-600"
-            disabled={isPendingTransaction}
+            disabled={isPendingCreateTransaction}
           >
-            {isPendingTransaction ? (
+            {isPendingCreateTransaction ? (
               <Loader2 className="animate-spin" />
             ) : (
               "Add"

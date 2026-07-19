@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import {
   MONTH_SELECT_ITEMS,
-  TRANSACTION_TYPES_SELECT_ITEMS,
+  TRANSACTION_TYPE_SELECT_ITEMS,
 } from "@/constants/transaction";
 
 export function TransactionFilter() {
@@ -34,7 +34,7 @@ export function TransactionFilter() {
     (m) => m.value === String(currentMonth),
   )?.label;
 
-  const selectedTypeLabel = TRANSACTION_TYPES_SELECT_ITEMS.find(
+  const selectedTypeLabel = TRANSACTION_TYPE_SELECT_ITEMS.find(
     (t) => t.value === currentType,
   )?.label;
 
@@ -122,7 +122,7 @@ export function TransactionFilter() {
               <SelectContent>
                 <SelectGroup>
                   <SelectLabel>Type</SelectLabel>
-                  {TRANSACTION_TYPES_SELECT_ITEMS.map((t) => (
+                  {TRANSACTION_TYPE_SELECT_ITEMS.map((t) => (
                     <SelectItem
                       key={t.label}
                       value={t.value}
