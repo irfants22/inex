@@ -15,7 +15,7 @@ export default function FloatingActionButton() {
           <DialogTrigger
             render={
               <Button
-                className="h-14 w-14 cursor-pointer rounded-full border-2 border-white bg-emerald-500 shadow-md hover:bg-emerald-600"
+                className="h-14 w-14 cursor-pointer rounded-full border-2 border-white bg-emerald-500 shadow-md hover:bg-emerald-600/80"
                 size="icon-lg"
               >
                 <Plus className="size-8" />

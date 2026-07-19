@@ -10,7 +10,7 @@ import {
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen w-full flex-col bg-slate-200 text-slate-800 antialiased">
+    <div className="flex min-h-screen w-full flex-col bg-slate-200 antialiased">
       <Navbar />
       <section className="mx-auto flex w-full max-w-6xl flex-1 flex-col items-center justify-between gap-16 px-6 py-12 lg:flex-row lg:py-24">
         <div className="flex max-w-xl flex-1 flex-col text-left">
@@ -18,7 +18,7 @@ export default function Home() {
             <Sparkles className="size-3.5 fill-emerald-600 text-emerald-600" />
             <span>Practical Financial Recording</span>
           </div>
-          <h1 className="text-4xl leading-tight font-bold tracking-tight text-slate-900 sm:text-5xl">
+          <h1 className="text-4xl leading-tight font-bold tracking-tight sm:text-5xl">
             Manage Finances More Simply with{" "}
             <span className="text-emerald-500">INEX</span>
           </h1>
