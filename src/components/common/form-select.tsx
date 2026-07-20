@@ -17,12 +17,13 @@ interface FormSelectProps<T extends FieldValues> {
   control: Control<T>;
   label: string;
   selectItem: { value: string; label: string; renderItem?: ReactNode }[];
+  isDisabled?: boolean;
 }
 
 export default function FormSelect<T extends FieldValues>(
   props: FormSelectProps<T>,
 ) {
-  const { control, label, name, selectItem } = props;
+  const { control, label, name, selectItem, isDisabled = false } = props;
 
   return (
     <Controller
@@ -37,7 +38,12 @@ export default function FormSelect<T extends FieldValues>(
         return (
           <Field data-invalid={!!error}>
             <FieldLabel htmlFor={name}>{label}</FieldLabel>
-            <Select {...field} value={value} onValueChange={onChange}>
+            <Select
+              {...field}
+              value={value}
+              onValueChange={onChange}
+              disabled={isDisabled}
+            >
               <SelectTrigger
                 className={cn("w-full", {
                   "border-destructive focus:ring-destructive": !!error,

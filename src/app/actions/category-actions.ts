@@ -83,3 +83,65 @@ export async function createCategory(
 
   return { status: "success" };
 }
+
+export async function updateCategory(
+  prevState: CategoryFormState,
+  formData: FormData,
+): Promise<CategoryFormState> {
+  const user = await requireUser();
+
+  const validatedFields = categoryFormSchema.safeParse({
+    name: formData.get("name"),
+    type: formData.get("type"),
+    icon: formData.get("icon"),
+    color: formData.get("color"),
+  });
+
+  if (!validatedFields.success) {
+    const tree = z.treeifyError(validatedFields.error);
+    return {
+      status: "error",
+      errors: {
+        name: tree.properties?.name?.errors,
+        type: tree.properties?.type?.errors,
+        icon: tree.properties?.icon?.errors,
+        color: tree.properties?.color?.errors,
+        _form: tree.errors,
+      },
+    };
+  }
+
+  const { name, type, icon, color } = validatedFields.data;
+
+  try {
+    await db
+      .update(categories)
+      .set({
+        name,
+        type,
+        icon,
+        color,
+      })
+      .where(
+        and(
+          eq(categories.userId, user.id),
+          eq(categories.id, formData.get("id") as string),
+        ),
+      );
+  } catch (error) {
+    console.error(error);
+    return {
+      status: "error",
+      errors: {
+        ...prevState.errors,
+        _form: ["Failed to save category, please try again"],
+      },
+    };
+  }
+
+  revalidatePath("/categories");
+
+  return {
+    status: "success",
+  };
+}
