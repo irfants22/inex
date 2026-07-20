@@ -31,6 +31,7 @@ import { Loader2 } from "lucide-react";
 import { startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 const initialStateCategory: CategoryFormState = {};
 
@@ -43,6 +44,7 @@ export default function DialogUpdateCategory({
   setOpen: (open: boolean) => void;
   currentData: CategoryData | null;
 }) {
+  const queryClient = useQueryClient();
   const { control, handleSubmit, reset, setValue } = useForm<CategoryFormInput>(
     {
       resolver: zodResolver(categoryFormSchema),
@@ -76,6 +78,7 @@ export default function DialogUpdateCategory({
   useEffect(() => {
     if (updateCategoryState.status === "success") {
       toast.success("Successfully update category");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
       reset();
       setOpen(false);
     }
@@ -85,7 +88,7 @@ export default function DialogUpdateCategory({
         descriptionClassName: "!text-black",
       });
     }
-  }, [updateCategoryState, reset, setOpen]);
+  }, [updateCategoryState, reset, setOpen, queryClient]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

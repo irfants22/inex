@@ -26,6 +26,7 @@ import { startTransition, useActionState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { CategoryFormState } from "@/types/category";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   CATEGORY_COLOR_NAMES,
   CATEGORY_ICON_NAMES,
@@ -41,6 +42,7 @@ export default function DialogCreateCategory({
 }: {
   setOpen: (open: boolean) => void;
 }) {
+  const queryClient = useQueryClient();
   const { handleSubmit, control, reset } = useForm<CategoryFormInput>({
     resolver: zodResolver(categoryFormSchema),
     defaultValues: INITIAL_CATEGORY_FORM,
@@ -61,6 +63,7 @@ export default function DialogCreateCategory({
   useEffect(() => {
     if (createCategoryState.status === "success") {
       toast.success("Successfully added category");
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
       reset();
       setOpen(false);
     }
@@ -70,7 +73,7 @@ export default function DialogCreateCategory({
         descriptionClassName: "!text-black",
       });
     }
-  }, [createCategoryState, reset, setOpen]);
+  }, [createCategoryState, reset, setOpen, queryClient]);
 
   return (
     <DialogContent className="sm:max-w-sm">

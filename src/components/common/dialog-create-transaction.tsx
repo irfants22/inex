@@ -59,6 +59,7 @@ export default function DialogCreateTransaction({
   const { data: categoriesData } = useQuery({
     queryKey: ["categories"],
     queryFn: () => getCategories(),
+    refetchOnMount: true,
   });
 
   useEffect(() => {
