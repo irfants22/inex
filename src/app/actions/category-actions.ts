@@ -145,3 +145,59 @@ export async function updateCategory(
     status: "success",
   };
 }
+
+export async function deleteCategory(
+  prevState: CategoryFormState,
+  formData: FormData,
+): Promise<CategoryFormState> {
+  const user = await requireUser();
+
+  const categoryId = formData.get("id") as string;
+
+  try {
+    const result = await db
+      .delete(categories)
+      .where(and(eq(categories.id, categoryId), eq(categories.userId, user.id)))
+      .returning({ id: categories.id });
+
+    if (result.length === 0) {
+      return {
+        status: "error",
+        errors: {
+          ...prevState.errors,
+          _form: ["Category not found"],
+        },
+      };
+    }
+  } catch (error) {
+    const cause = error instanceof Error ? error.cause : undefined;
+
+    if (
+      cause &&
+      typeof cause === "object" &&
+      "code" in cause &&
+      cause.code === "23503"
+    ) {
+      return {
+        status: "error",
+        errors: {
+          ...prevState.errors,
+          _form: ["This category is still used by existing transactions"],
+        },
+      };
+    }
+
+    console.error(error);
+    return {
+      status: "error",
+      errors: {
+        ...prevState.errors,
+        _form: ["Failed to delete category, please try again"],
+      },
+    };
+  }
+
+  revalidatePath("/categories");
+
+  return { status: "success" };
+}

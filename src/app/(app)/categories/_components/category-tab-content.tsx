@@ -5,6 +5,7 @@ import { CategoryData } from "@/types/category";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
 import DialogUpdateCategory from "./dialog-update-category";
+import DialogDeleteCategory from "./dialog-delete-category";
 
 type CategoryTabContentProps = {
   type: "income" | "expense";
@@ -16,7 +17,8 @@ export default function CategoryTabContent({
 }: {
   data: CategoryTabContentProps[];
 }) {
-  const [open, setOpen] = useState(false);
+  const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<CategoryData | null>(
     null,
   );
@@ -69,10 +71,16 @@ export default function CategoryTabContent({
                         className="size-4 cursor-pointer text-gray-500 transition hover:scale-105"
                         onClick={() => {
                           setSelectedCategory(category);
-                          setOpen(true);
+                          setOpenDialogUpdate(true);
                         }}
                       />
-                      <Trash className="size-4 cursor-pointer text-red-500 transition hover:scale-105" />
+                      <Trash
+                        className="size-4 cursor-pointer text-red-500 transition hover:scale-105"
+                        onClick={() => {
+                          setSelectedCategory(category);
+                          setOpenDialogDelete(true);
+                        }}
+                      />
                     </div>
                   </div>
                 </div>
@@ -82,8 +90,13 @@ export default function CategoryTabContent({
         </div>
       ))}
       <DialogUpdateCategory
-        open={open}
-        setOpen={setOpen}
+        open={openDialogUpdate}
+        setOpen={setOpenDialogUpdate}
+        currentData={selectedCategory}
+      />
+      <DialogDeleteCategory
+        open={openDialogDelete}
+        setOpen={setOpenDialogDelete}
         currentData={selectedCategory}
       />
     </div>
