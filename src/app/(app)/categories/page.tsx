@@ -1,7 +1,7 @@
 import Category from "./_components/category";
 
 export const metadata = {
-  title: "INEX | Categories",
+  title: "INEX | Category",
 };
 
 export default async function CategoryPage({
