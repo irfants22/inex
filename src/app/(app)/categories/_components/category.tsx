@@ -1,6 +1,5 @@
 import CategoryList from "./category-list";
 import { getCategories } from "@/app/actions/category-actions";
-
 import CategoryHeader from "./category-header";
 
 export default async function Category({
