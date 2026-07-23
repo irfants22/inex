@@ -91,7 +91,7 @@ export default function Login() {
           />
           <Button
             type="submit"
-            className="mt-3 w-full bg-emerald-500 hover:bg-emerald-600"
+            className="mt-3 w-full bg-emerald-500 hover:bg-emerald-600/80"
           >
             {isPendingLogin ? <Loader2 className="animate-spin" /> : "Sign In"}
           </Button>

@@ -60,7 +60,7 @@ export default function Navbar({ showSidebarTrigger = false }: NavbarProps) {
           ) : (
             <Button
               size="sm"
-              className="cursor-pointer gap-1.5 bg-emerald-500 text-white shadow-sm shadow-emerald-500/10 transition-all hover:bg-emerald-600 hover:shadow-emerald-500/20"
+              className="cursor-pointer gap-1.5 bg-emerald-500 text-white shadow-sm shadow-emerald-500/10 transition-all hover:bg-emerald-600/80 hover:shadow-emerald-500/20"
               onClick={() => redirect("/login")}
             >
               <LogIn className="size-4" />

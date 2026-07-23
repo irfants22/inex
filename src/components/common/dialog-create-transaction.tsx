@@ -118,7 +118,7 @@ export default function DialogCreateTransaction({
           <DialogClose render={<Button variant="outline">Cancel</Button>} />
           <Button
             type="submit"
-            className="bg-emerald-500 hover:bg-emerald-600"
+            className="bg-emerald-500 hover:bg-emerald-600/80"
             disabled={isPendingCreateTransaction}
           >
             {isPendingCreateTransaction ? (

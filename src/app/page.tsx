@@ -31,7 +31,7 @@ export default function Home() {
             <Link href="/login" passHref className="w-full sm:w-auto">
               <Button
                 size="lg"
-                className="w-full cursor-pointer rounded-lg bg-emerald-500 px-6 py-6 text-base font-semibold text-white transition-colors hover:bg-emerald-600 sm:w-auto"
+                className="w-full cursor-pointer rounded-lg bg-emerald-500 px-6 py-6 text-base font-semibold text-white transition-colors hover:bg-emerald-600/80 sm:w-auto"
               >
                 Start Now
                 <ArrowRight className="ml-1 size-5" />
