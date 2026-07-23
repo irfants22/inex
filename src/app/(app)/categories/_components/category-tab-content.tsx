@@ -32,7 +32,7 @@ export default function CategoryTabContent({
           <p className="text-muted-foreground tracking-wide capitalize">
             {group.type} · {group.categories.length} Categories
           </p>
-          <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid w-full grid-cols-[repeat(1,minmax(200px,1fr))] gap-2 sm:grid-cols-[repeat(2,minmax(200px,1fr))] md:grid-cols-[repeat(3,minmax(200px,1fr))]">
             {group.categories.map((category) => {
               const iconStyle =
                 CATEGORY_ICON_STYLES[
@@ -41,12 +41,12 @@ export default function CategoryTabContent({
               return (
                 <div
                   key={category.id}
-                  className="item-center flex w-full justify-center gap-2 rounded-sm bg-white p-3"
+                  className="item-center flex w-full gap-3 rounded-md bg-white p-3 transition-all"
                 >
-                  <div className="flex items-center justify-center">
+                  <div className="flex shrink-0 items-center justify-center">
                     <div
                       className={cn(
-                        "flex aspect-square w-10 items-center justify-center rounded-sm",
+                        "flex aspect-square w-12 items-center justify-center rounded-md",
                         iconStyle.bg,
                         iconStyle.text,
                       )}
@@ -57,31 +57,31 @@ export default function CategoryTabContent({
                       />
                     </div>
                   </div>
-                  <div className="flex flex-1 items-center justify-between">
-                    <div className="flex flex-col justify-between">
-                      <p className="font-medium">{category.name}</p>
-                      <div className="flex items-center justify-center gap-1">
-                        <p className="text-muted-foreground text-xs capitalize">
-                          {category.type}
-                        </p>
-                      </div>
+
+                  <div className="flex flex-1 flex-col items-start justify-between">
+                    <p className="text-sm font-medium">{category.name}</p>
+                    <div className="flex items-center justify-center gap-1">
+                      <p className="text-muted-foreground text-xs capitalize">
+                        {category.type}
+                      </p>
                     </div>
-                    <div className="flex items-center justify-end gap-2">
-                      <Edit
-                        className="size-4 cursor-pointer text-gray-500 transition hover:scale-105"
-                        onClick={() => {
-                          setSelectedCategory(category);
-                          setOpenDialogUpdate(true);
-                        }}
-                      />
-                      <Trash
-                        className="size-4 cursor-pointer text-red-500 transition hover:scale-105"
-                        onClick={() => {
-                          setSelectedCategory(category);
-                          setOpenDialogDelete(true);
-                        }}
-                      />
-                    </div>
+                  </div>
+
+                  <div className="flex shrink-0 items-center justify-end gap-x-2">
+                    <Edit
+                      className="text-muted-foreground size-4 cursor-pointer transition hover:text-black"
+                      onClick={() => {
+                        setSelectedCategory(category);
+                        setOpenDialogUpdate(true);
+                      }}
+                    />
+                    <Trash
+                      className="text-muted-foreground size-4 cursor-pointer transition hover:text-red-500"
+                      onClick={() => {
+                        setSelectedCategory(category);
+                        setOpenDialogDelete(true);
+                      }}
+                    />
                   </div>
                 </div>
               );

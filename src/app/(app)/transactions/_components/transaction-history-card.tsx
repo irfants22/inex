@@ -16,6 +16,7 @@ import DialogUpdateTransaction from "./dialog-update-transaction";
 import { useSearchParams } from "next/navigation";
 import { MONTH_SELECT_ITEMS } from "@/constants/transaction";
 import DialogDeleteTransaction from "./dialog-delete-transaction";
+import { Separator } from "@/components/ui/separator";
 
 interface TransactionHistoryCardProps {
   date: string;
@@ -63,7 +64,7 @@ export default function TransactionHistoryCard({
             }
           />
           <CollapsibleContent className="flex flex-col items-center justify-center p-2.5 pt-0 text-sm">
-            <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
+            <div className="grid w-full grid-cols-[repeat(1,minmax(240px,1fr))] gap-2 sm:grid-cols-[repeat(2,minmax(240px,1fr))] md:grid-cols-[repeat(3,minmax(240px,1fr))]">
               {group?.transactions.map((trx) => {
                 const iconStyle =
                   CATEGORY_ICON_STYLES[
@@ -73,9 +74,8 @@ export default function TransactionHistoryCard({
                 return (
                   <div
                     key={trx.id}
-                    className="item-center group flex w-full gap-3 rounded-sm bg-white p-3 transition-all"
+                    className="item-center flex w-full gap-3 rounded-md bg-white p-3 transition-all"
                   >
-                    {/* icon */}
                     <div className="flex shrink-0 items-center justify-center">
                       <div
                         className={cn(
@@ -91,7 +91,6 @@ export default function TransactionHistoryCard({
                       </div>
                     </div>
 
-                    {/* category */}
                     <div className="flex min-w-0 flex-1 flex-col items-start justify-between">
                       <p className="w-full truncate text-sm font-medium">
                         {trx.categoryName}
@@ -99,15 +98,14 @@ export default function TransactionHistoryCard({
                       <div className="flex w-full items-center gap-1">
                         <p className="text-muted-foreground text-xs capitalize">
                           {trx.categoryType}
-                        </p>{" "}
-                        ·{" "}
+                        </p>
+                        <Separator orientation="vertical" />
                         <p className="text-muted-foreground truncate text-xs">
                           {trx.note || "Other"}
                         </p>
                       </div>
                     </div>
 
-                    {/* amount */}
                     <div className="flex shrink-0 flex-col items-end justify-between">
                       <p
                         className={cn(
