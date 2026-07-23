@@ -10,11 +10,12 @@ import {
 import { CATEGORY_ICON_STYLES } from "@/constants/icon";
 import { cn } from "@/lib/utils";
 import { TransactionData } from "@/types/transaction";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, Edit, Trash } from "lucide-react";
 import { useState } from "react";
 import DialogUpdateTransaction from "./dialog-update-transaction";
 import { useSearchParams } from "next/navigation";
 import { MONTH_SELECT_ITEMS } from "@/constants/transaction";
+import DialogDeleteTransaction from "./dialog-delete-transaction";
 
 interface TransactionHistoryCardProps {
   date: string;
@@ -27,7 +28,8 @@ export default function TransactionHistoryCard({
   data: TransactionHistoryCardProps[];
 }) {
   const params = useSearchParams();
-  const [open, setOpen] = useState(false);
+  const [openDialogUpdate, setOpenDialogUpdate] = useState(false);
+  const [openDialogDelete, setOpenDialogDelete] = useState(false);
   const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionData | null>(null);
 
@@ -61,7 +63,7 @@ export default function TransactionHistoryCard({
             }
           />
           <CollapsibleContent className="flex flex-col items-center justify-center p-2.5 pt-0 text-sm">
-            <div className="grid w-full grid-cols-1 gap-2 md:grid-cols-2">
+            <div className="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3">
               {group?.transactions.map((trx) => {
                 const iconStyle =
                   CATEGORY_ICON_STYLES[
@@ -71,16 +73,13 @@ export default function TransactionHistoryCard({
                 return (
                   <div
                     key={trx.id}
-                    className="item-center hover:bg-muted flex w-full cursor-pointer justify-center gap-2 rounded-sm bg-white p-3 transition"
-                    onClick={() => {
-                      setSelectedTransaction(trx);
-                      setOpen(true);
-                    }}
+                    className="item-center group flex w-full gap-3 rounded-sm bg-white p-3 transition-all"
                   >
-                    <div className="flex items-center justify-center">
+                    {/* icon */}
+                    <div className="flex shrink-0 items-center justify-center">
                       <div
                         className={cn(
-                          "flex aspect-square w-10 items-center justify-center rounded-sm",
+                          "flex aspect-square w-12 items-center justify-center rounded-md",
                           iconStyle.bg,
                           iconStyle.text,
                         )}
@@ -91,31 +90,51 @@ export default function TransactionHistoryCard({
                         />
                       </div>
                     </div>
-                    <div className="flex flex-1 items-center justify-between">
-                      <div className="flex flex-col justify-between">
-                        <p className="font-medium">{trx.categoryName}</p>
-                        <div className="flex items-center justify-center gap-1">
-                          <p className="text-muted-foreground text-xs capitalize">
-                            {trx.categoryType}
-                          </p>{" "}
-                          ·{" "}
-                          <p className="text-muted-foreground max-w-40 truncate text-xs">
-                            {trx.note || "Other"}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-end">
-                        <p
-                          className={cn(
-                            "font-medium",
-                            trx.categoryType === "income"
-                              ? "text-green-500"
-                              : "text-red-500",
-                          )}
-                        >
-                          {trx.categoryType === "income" ? "+" : "-"}Rp.{" "}
-                          {Number(trx.amount).toLocaleString("id-ID")}
+
+                    {/* category */}
+                    <div className="flex min-w-0 flex-1 flex-col items-start justify-between">
+                      <p className="w-full truncate text-sm font-medium">
+                        {trx.categoryName}
+                      </p>
+                      <div className="flex w-full items-center gap-1">
+                        <p className="text-muted-foreground text-xs capitalize">
+                          {trx.categoryType}
+                        </p>{" "}
+                        ·{" "}
+                        <p className="text-muted-foreground truncate text-xs">
+                          {trx.note || "Other"}
                         </p>
+                      </div>
+                    </div>
+
+                    {/* amount */}
+                    <div className="flex shrink-0 flex-col items-end justify-between">
+                      <p
+                        className={cn(
+                          "text-sm font-medium",
+                          trx.categoryType === "income"
+                            ? "text-green-500"
+                            : "text-red-500",
+                        )}
+                      >
+                        {trx.categoryType === "income" ? "+" : "-"}Rp.{" "}
+                        {Number(trx.amount).toLocaleString("id-ID")}
+                      </p>
+                      <div className="flex items-center gap-x-2">
+                        <Edit
+                          className="text-muted-foreground size-4 cursor-pointer transition hover:text-black"
+                          onClick={() => {
+                            setSelectedTransaction(trx);
+                            setOpenDialogUpdate(true);
+                          }}
+                        />
+                        <Trash
+                          className="text-muted-foreground size-4 cursor-pointer transition hover:text-red-500"
+                          onClick={() => {
+                            setSelectedTransaction(trx);
+                            setOpenDialogDelete(true);
+                          }}
+                        />
                       </div>
                     </div>
                   </div>
@@ -126,8 +145,13 @@ export default function TransactionHistoryCard({
         </Collapsible>
       ))}
       <DialogUpdateTransaction
-        open={open}
-        setOpen={setOpen}
+        open={openDialogUpdate}
+        setOpen={setOpenDialogUpdate}
+        currentData={selectedTransaction}
+      />
+      <DialogDeleteTransaction
+        open={openDialogDelete}
+        setOpen={setOpenDialogDelete}
         currentData={selectedTransaction}
       />
     </div>

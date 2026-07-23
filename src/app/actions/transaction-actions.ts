@@ -10,6 +10,12 @@ import z from "zod";
 import { revalidatePath } from "next/cache";
 import { format } from "date-fns";
 
+const VALID_CATEGORY_TYPES = ["income", "expense"] as const;
+
+function isValidCategoryType(type: string): type is "income" | "expense" {
+  return VALID_CATEGORY_TYPES.includes(type as "income" | "expense");
+}
+
 export async function getTransactions(
   month: number,
   year: number,
@@ -26,8 +32,8 @@ export async function getTransactions(
     lt(transactions.transactionDate, format(endDate, "yyyy-MM-dd")),
   ];
 
-  if (type !== "all") {
-    conditions.push(eq(categories.type, type as "income" | "expense"));
+  if (type !== "all" && isValidCategoryType(type)) {
+    conditions.push(eq(categories.type, type));
   }
 
   return db
@@ -96,7 +102,8 @@ export async function createTransaction(
     };
   }
 
-  revalidatePath("/home", "layout");
+  revalidatePath("/home");
+  revalidatePath("/transactions");
 
   return { status: "success" };
 }
@@ -156,7 +163,55 @@ export async function updateTransaction(
     };
   }
 
-  revalidatePath("/home", "layout");
+  revalidatePath("/home");
+  revalidatePath("/transactions");
 
   return { status: "success" };
+}
+
+export async function deleteTransaction(
+  prevState: TransactionFormState,
+  formData: FormData,
+): Promise<TransactionFormState> {
+  const user = await requireUser();
+
+  const transactionId = formData.get("id") as string;
+
+  try {
+    const result = await db
+      .delete(transactions)
+      .where(
+        and(
+          eq(transactions.id, transactionId),
+          eq(transactions.userId, user.id),
+        ),
+      )
+      .returning({ id: transactions.id });
+
+    if (result.length === 0) {
+      return {
+        status: "error",
+        errors: {
+          ...prevState.errors,
+          _form: ["Transaction not found"],
+        },
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      status: "error",
+      errors: {
+        ...prevState.errors,
+        _form: ["Failed to delete transaction, please try again"],
+      },
+    };
+  }
+
+  revalidatePath("/home");
+  revalidatePath("/transactions");
+
+  return {
+    status: "success",
+  };
 }
