@@ -79,7 +79,6 @@ export default function DialogUpdateTransaction({
   useEffect(() => {
     if (updateTransactionState.status === "success") {
       toast.success("Successfully update transaction");
-      reset();
       setOpen(false);
     }
     if (updateTransactionState?.status === "error") {
@@ -89,6 +88,12 @@ export default function DialogUpdateTransaction({
       });
     }
   }, [updateTransactionState, reset, setOpen]);
+
+  useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open, reset]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -24,7 +24,7 @@ export default function CategoryHeader() {
               </Button>
             }
           />
-          <DialogCreateCategory setOpen={setOpen} />
+          <DialogCreateCategory open={open} setOpen={setOpen} />
         </Dialog>
       </div>
     </div>

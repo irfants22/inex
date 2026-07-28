@@ -79,7 +79,6 @@ export default function DialogUpdateCategory({
     if (updateCategoryState.status === "success") {
       toast.success("Successfully update category");
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      reset();
       setOpen(false);
     }
     if (updateCategoryState?.status === "error") {
@@ -89,6 +88,12 @@ export default function DialogUpdateCategory({
       });
     }
   }, [updateCategoryState, reset, setOpen, queryClient]);
+
+  useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open, reset]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

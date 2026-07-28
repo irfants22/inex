@@ -32,8 +32,10 @@ import { CategoryIcon } from "./category-icon";
 const initialStateTransaction: TransactionFormState = {};
 
 export default function DialogCreateTransaction({
+  open,
   setOpen,
 }: {
+  open: boolean;
   setOpen: (open: boolean) => void;
 }) {
   const { handleSubmit, control, reset } = useForm<TransactionFormInput>({
@@ -65,7 +67,6 @@ export default function DialogCreateTransaction({
   useEffect(() => {
     if (createTransactionState.status === "success") {
       toast.success("Successfully added transaction");
-      reset();
       setOpen(false);
     }
     if (createTransactionState?.status === "error") {
@@ -75,6 +76,12 @@ export default function DialogCreateTransaction({
       });
     }
   }, [createTransactionState, reset, setOpen]);
+
+  useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open, reset]);
 
   return (
     <DialogContent className="sm:max-w-sm">

@@ -85,7 +85,7 @@ export default function DialogCreateRecurringTransaction({
   }, [createRecurringTransactionState, reset, setOpen]);
 
   useEffect(() => {
-    if (open === false) {
+    if (!open) {
       reset();
     }
   }, [open, reset]);

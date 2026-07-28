@@ -38,8 +38,10 @@ import { cn } from "@/lib/utils";
 const initialStateCategory: CategoryFormState = {};
 
 export default function DialogCreateCategory({
+  open,
   setOpen,
 }: {
+  open: boolean;
   setOpen: (open: boolean) => void;
 }) {
   const queryClient = useQueryClient();
@@ -64,7 +66,6 @@ export default function DialogCreateCategory({
     if (createCategoryState.status === "success") {
       toast.success("Successfully added category");
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      reset();
       setOpen(false);
     }
     if (createCategoryState?.status === "error") {
@@ -74,6 +75,12 @@ export default function DialogCreateCategory({
       });
     }
   }, [createCategoryState, reset, setOpen, queryClient]);
+
+  useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open, reset]);
 
   return (
     <DialogContent className="sm:max-w-sm">

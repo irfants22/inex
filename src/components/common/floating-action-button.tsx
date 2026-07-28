@@ -22,7 +22,7 @@ export default function FloatingActionButton() {
               </Button>
             }
           />
-          <DialogCreateTransaction setOpen={setOpen} />
+          <DialogCreateTransaction open={open} setOpen={setOpen} />
         </Dialog>
       </div>
     </div>
