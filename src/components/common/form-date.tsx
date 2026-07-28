@@ -29,6 +29,7 @@ export default function FormDate<T extends FieldValues>(
           <FieldLabel htmlFor={name}>{label}</FieldLabel>
           <Popover>
             <PopoverTrigger
+              aria-invalid={!!error}
               render={
                 <Button
                   variant="outline"

@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { cn } from "@/lib/utils";
 import { ReactNode } from "react";
 
 interface FormSelectProps<T extends FieldValues> {
@@ -44,11 +43,7 @@ export default function FormSelect<T extends FieldValues>(
               onValueChange={onChange}
               disabled={isDisabled}
             >
-              <SelectTrigger
-                className={cn("w-full", {
-                  "border-destructive focus:ring-destructive": !!error,
-                })}
-              >
+              <SelectTrigger aria-invalid={!!error} className="w-full">
                 <SelectValue
                   placeholder={`Select ${label}`}
                   className="capitalize"
