@@ -7,8 +7,8 @@ export const metadata = {
 export default async function RecurringTransactionPage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{ status?: string }>;
 }) {
   const params = await searchParams;
-  return <RecurringTransaction />;
+  return <RecurringTransaction searchParams={params} />;
 }

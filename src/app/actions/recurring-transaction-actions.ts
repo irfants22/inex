@@ -2,26 +2,43 @@
 
 import { categories, recurringTransactions } from "@/db/schema";
 import { requireUser } from "./auth-actions";
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { recurringTransactionFormSchema } from "@/validations/recurring-transaction-validation";
 import { RecurringTransactionFormState } from "@/types/recurring-transaction";
 import z from "zod";
 import { revalidatePath } from "next/cache";
 
-const VALID_CATEGORY_TYPES = ["income", "expense"] as const;
+const VALID_RECURRING_STATUS = ["active", "inactive"] as const;
 
-function isValidCategoryType(type: string): type is "income" | "expense" {
-  return VALID_CATEGORY_TYPES.includes(type as "income" | "expense");
+function isValidRecurringStatus(
+  status: string,
+): status is "active" | "inactive" {
+  return VALID_RECURRING_STATUS.includes(status as "active" | "inactive");
 }
 
-export async function getRecurringTransactions(type: string) {
+function parseRecurringStatus(value: string): boolean | undefined {
+  switch (value) {
+    case "active":
+      return true;
+
+    case "inactive":
+      return false;
+
+    default:
+      return undefined;
+  }
+}
+
+export async function getRecurringTransactions(status: string) {
   const user = await requireUser();
 
   const conditions = [eq(recurringTransactions.userId, user.id)];
 
-  if (type !== "all" && isValidCategoryType(type)) {
-    conditions.push(eq(categories.type, type));
+  const activeStatus = parseRecurringStatus(status);
+
+  if (activeStatus !== undefined && isValidRecurringStatus(status)) {
+    conditions.push(eq(recurringTransactions.isActive, activeStatus));
   }
 
   return db
@@ -29,6 +46,10 @@ export async function getRecurringTransactions(type: string) {
       id: recurringTransactions.id,
       amount: recurringTransactions.amount,
       note: recurringTransactions.note,
+      frequency: recurringTransactions.frequency,
+      nextRun: recurringTransactions.nextRun,
+      endDate: recurringTransactions.endDate,
+      isActive: recurringTransactions.isActive,
       categoryId: categories.id,
       categoryName: categories.name,
       categoryType: categories.type,
@@ -37,8 +58,11 @@ export async function getRecurringTransactions(type: string) {
     })
     .from(recurringTransactions)
     .innerJoin(categories, eq(recurringTransactions.categoryId, categories.id))
-    .where(and(...conditions));
-  // .orderBy(desc(recurringTransactions.transactionDate), desc(recurringTransactions.id));
+    .where(and(...conditions))
+    .orderBy(
+      desc(recurringTransactions.nextRun),
+      desc(recurringTransactions.id),
+    );
 }
 
 export async function createRecurringTransaction(
