@@ -128,3 +128,74 @@ export async function createRecurringTransaction(
 
   return { status: "success" };
 }
+
+export async function updateRecurringTransaction(
+  prevState: RecurringTransactionFormState,
+  formData: FormData,
+): Promise<RecurringTransactionFormState> {
+  const user = await requireUser();
+
+  const validatedFields = recurringTransactionFormSchema.safeParse({
+    categoryId: formData.get("categoryId"),
+    amount: formData.get("amount"),
+    note: formData.get("note"),
+    frequency: formData.get("frequency"),
+    nextRun: formData.get("nextRun"),
+    endDate: formData.get("endDate"),
+    isActive: formData.get("isActive") === "true",
+  });
+
+  if (!validatedFields.success) {
+    const tree = z.treeifyError(validatedFields.error);
+    return {
+      status: "error",
+      errors: {
+        categoryId: tree.properties?.categoryId?.errors,
+        amount: tree.properties?.amount?.errors,
+        note: tree.properties?.note?.errors,
+        frequency: tree.properties?.frequency?.errors,
+        nextRun: tree.properties?.nextRun?.errors,
+        endDate: tree.properties?.endDate?.errors,
+        isActive: tree.properties?.isActive?.errors,
+        _form: tree.errors,
+      },
+    };
+  }
+
+  const { categoryId, amount, note, frequency, nextRun, endDate, isActive } =
+    validatedFields.data;
+
+  try {
+    await db
+      .update(recurringTransactions)
+      .set({
+        categoryId,
+        amount: String(amount),
+        note: note || null,
+        frequency,
+        nextRun,
+        endDate: endDate || null,
+        isActive,
+      })
+      .where(
+        and(
+          eq(recurringTransactions.userId, user.id),
+          eq(recurringTransactions.id, formData.get("id") as string),
+        ),
+      );
+  } catch (error) {
+    console.error(error);
+    return {
+      status: "error",
+      errors: {
+        ...prevState.errors,
+        _form: ["Failed to save recurring transaction, please try again"],
+      },
+    };
+  }
+
+  revalidatePath("/recurring-transactions");
+  revalidatePath("/transactions");
+
+  return { status: "success" };
+}

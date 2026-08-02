@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { RecurringTransactionData } from "@/types/recurring-transaction";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
+import DialogUpdateRecurringTransaction from "./dialog-update-recurring-transaction";
 
 type RecurringTransactionTabContentProps = {
   status: "active" | "inactive";
@@ -106,6 +107,7 @@ export default function RecurringTransactionTabContent({
                         className="text-muted-foreground size-4 cursor-pointer transition hover:text-black"
                         onClick={() => {
                           setOpenDialogUpdate(true);
+                          setSelectedRecurringTransaction(recurring);
                         }}
                       />
                       <Trash
@@ -122,6 +124,11 @@ export default function RecurringTransactionTabContent({
           </div>
         </div>
       ))}
+      <DialogUpdateRecurringTransaction
+        open={openDialogUpdate}
+        setOpen={setOpenDialogUpdate}
+        currentData={selectedRecurringTransaction}
+      />
     </div>
   );
 }

@@ -97,7 +97,7 @@ export default function DialogCreateRecurringTransaction({
           Add Recurring
         </DialogTitle>
         <DialogDescription className="text-sm font-normal">
-          create your recurring transaction schedule
+          Create your recurring transaction schedule
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={onSubmit} className="space-y-4">
