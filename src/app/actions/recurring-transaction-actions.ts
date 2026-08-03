@@ -199,3 +199,42 @@ export async function updateRecurringTransaction(
 
   return { status: "success" };
 }
+
+export async function updateRecurringStatus(
+  id: string,
+  value: boolean,
+): Promise<{ status: "success" | "error"; message?: string }> {
+  const user = await requireUser();
+
+  try {
+    const result = await db
+      .update(recurringTransactions)
+      .set({
+        isActive: value,
+      })
+      .where(
+        and(
+          eq(recurringTransactions.id, id),
+          eq(recurringTransactions.userId, user.id),
+        ),
+      )
+      .returning({ id: recurringTransactions.id });
+
+    if (result.length === 0) {
+      return {
+        status: "error",
+        message: "Recurring transaction not found",
+      };
+    }
+  } catch {
+    return {
+      status: "error",
+      message: "Failed to save recurring transaction, please try again",
+    };
+  }
+
+  revalidatePath("/recurring-transactions");
+  revalidatePath("/transactions");
+
+  return { status: "success" };
+}

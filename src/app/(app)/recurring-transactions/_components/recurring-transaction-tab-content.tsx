@@ -7,6 +7,7 @@ import { RecurringTransactionData } from "@/types/recurring-transaction";
 import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
 import DialogUpdateRecurringTransaction from "./dialog-update-recurring-transaction";
+import RecurringSwitchStatus from "./recurring-switch-status";
 
 type RecurringTransactionTabContentProps = {
   status: "active" | "inactive";
@@ -74,7 +75,7 @@ export default function RecurringTransactionTabContent({
                       </p>
                     </div>
                     <div className="flex w-full items-center gap-1">
-                      <p className="text-muted-foreground text-xs capitalize">
+                      <p className="text-muted-foreground truncate text-xs capitalize">
                         Next run · {recurring.nextRun}
                       </p>
                     </div>
@@ -93,14 +94,9 @@ export default function RecurringTransactionTabContent({
                       {Number(recurring.amount).toLocaleString("id-ID")}
                     </p>
                     <div className="flex items-center gap-x-2">
-                      <Switch
-                        defaultChecked={recurring.isActive}
-                        checked={recurring.isActive}
-                        onCheckedChange={(value) => {
-                          console.log(value);
-                        }}
-                        id="status-recurring-toggle"
-                        className="data-checked:bg-emerald-500"
+                      <RecurringSwitchStatus
+                        id={recurring.id}
+                        initialIsActive={recurring.isActive}
                       />
                       <Separator orientation="vertical" />
                       <Edit
