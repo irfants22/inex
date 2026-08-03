@@ -238,3 +238,48 @@ export async function updateRecurringStatus(
 
   return { status: "success" };
 }
+
+export async function deleteRecurringTransaction(
+  prevState: RecurringTransactionFormState,
+  formData: FormData,
+): Promise<RecurringTransactionFormState> {
+  const user = await requireUser();
+
+  const recurringTransactionId = formData.get("id") as string;
+
+  try {
+    const result = await db
+      .delete(recurringTransactions)
+      .where(
+        and(
+          eq(recurringTransactions.id, recurringTransactionId),
+          eq(recurringTransactions.userId, user.id),
+        ),
+      )
+      .returning({ id: recurringTransactions.id });
+
+    if (result.length === 0) {
+      return {
+        status: "error",
+        errors: {
+          ...prevState.errors,
+          _form: ["Recurring transaction not found"],
+        },
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      status: "error",
+      errors: {
+        ...prevState.errors,
+        _form: ["Failed to delete recurring transaction, please try again"],
+      },
+    };
+  }
+
+  revalidatePath("/recurring-transactions");
+  revalidatePath("/transactions");
+
+  return { status: "success" };
+}

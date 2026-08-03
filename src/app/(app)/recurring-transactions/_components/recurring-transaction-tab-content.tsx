@@ -1,6 +1,5 @@
 import { CategoryIcon } from "@/components/common/category-icon";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import { CATEGORY_ICON_STYLES } from "@/constants/icon";
 import { cn } from "@/lib/utils";
 import { RecurringTransactionData } from "@/types/recurring-transaction";
@@ -8,6 +7,7 @@ import { Edit, Trash } from "lucide-react";
 import { useState } from "react";
 import DialogUpdateRecurringTransaction from "./dialog-update-recurring-transaction";
 import RecurringSwitchStatus from "./recurring-switch-status";
+import DialogDeleteRecurringTransaction from "./dialog-delete-recurring-transaction";
 
 type RecurringTransactionTabContentProps = {
   status: "active" | "inactive";
@@ -110,6 +110,7 @@ export default function RecurringTransactionTabContent({
                         className="text-muted-foreground size-4 cursor-pointer transition hover:text-red-500"
                         onClick={() => {
                           setOpenDialogDelete(true);
+                          setSelectedRecurringTransaction(recurring);
                         }}
                       />
                     </div>
@@ -123,6 +124,11 @@ export default function RecurringTransactionTabContent({
       <DialogUpdateRecurringTransaction
         open={openDialogUpdate}
         setOpen={setOpenDialogUpdate}
+        currentData={selectedRecurringTransaction}
+      />
+      <DialogDeleteRecurringTransaction
+        open={openDialogDelete}
+        setOpen={setOpenDialogDelete}
         currentData={selectedRecurringTransaction}
       />
     </div>
