@@ -82,7 +82,7 @@ export default function DialogCreateRecurringTransaction({
         descriptionClassName: "!text-black",
       });
     }
-  }, [createRecurringTransactionState, reset, setOpen]);
+  }, [createRecurringTransactionState, setOpen]);
 
   useEffect(() => {
     if (!open) {

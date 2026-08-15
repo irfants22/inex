@@ -75,7 +75,7 @@ export default function DialogCreateTransaction({
         descriptionClassName: "!text-black",
       });
     }
-  }, [createTransactionState, reset, setOpen]);
+  }, [createTransactionState, setOpen]);
 
   useEffect(() => {
     if (!open) {

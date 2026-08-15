@@ -74,7 +74,7 @@ export default function DialogCreateCategory({
         descriptionClassName: "!text-black",
       });
     }
-  }, [createCategoryState, reset, setOpen, queryClient]);
+  }, [createCategoryState, setOpen, queryClient]);
 
   useEffect(() => {
     if (!open) {
