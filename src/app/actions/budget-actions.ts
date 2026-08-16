@@ -7,6 +7,19 @@ import { z } from "zod";
 import { db } from "@/db";
 import { budgets } from "@/db/schema";
 import { revalidatePath } from "next/cache";
+import { eq } from "drizzle-orm";
+
+export async function getBudgetLimit() {
+  const user = await requireUser();
+
+  const [budget] = await db
+    .select()
+    .from(budgets)
+    .where(eq(budgets.userId, user.id))
+    .limit(1);
+
+  return budget ?? null;
+}
 
 export async function setBudgetLimit(
   prevState: BudgetFormState,
