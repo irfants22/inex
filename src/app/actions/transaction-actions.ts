@@ -96,6 +96,26 @@ export async function getDashboardSummary() {
   };
 }
 
+export async function getRecentTransactions(limit: number = 5) {
+  const user = await requireUser();
+
+  return db
+    .select({
+      id: transactions.id,
+      amount: transactions.amount,
+      transactionDate: transactions.transactionDate,
+      categoryName: categories.name,
+      categoryType: categories.type,
+      categoryIcon: categories.icon,
+      categoryColor: categories.color,
+    })
+    .from(transactions)
+    .innerJoin(categories, eq(transactions.categoryId, categories.id))
+    .where(eq(transactions.userId, user.id))
+    .orderBy(desc(transactions.transactionDate), desc(transactions.id))
+    .limit(limit);
+}
+
 export async function createTransaction(
   prevState: TransactionFormState,
   formData: FormData,
