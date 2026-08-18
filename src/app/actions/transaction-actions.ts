@@ -3,7 +3,7 @@
 import { requireUser } from "./auth-actions";
 import { db } from "@/db";
 import { categories, transactions } from "@/db/schema";
-import { and, desc, eq, gte, lt } from "drizzle-orm";
+import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
 import { TransactionFormState } from "@/types/transaction";
 import { transactionFormSchema } from "@/validations/transaction-validation";
 import z from "zod";
@@ -52,6 +52,48 @@ export async function getTransactions(
     .innerJoin(categories, eq(transactions.categoryId, categories.id))
     .where(and(...conditions))
     .orderBy(desc(transactions.transactionDate), desc(transactions.id));
+}
+
+export async function getDashboardSummary() {
+  const user = await requireUser();
+
+  const now = new Date();
+  const startOfMonth = format(
+    new Date(now.getFullYear(), now.getMonth(), 1),
+    "yyyy-MM-dd",
+  );
+  const startOfNextMonth = format(
+    new Date(now.getFullYear(), now.getMonth() + 1, 1),
+    "yyyy-MM-dd",
+  );
+
+  const [summary] = await db
+    .select({
+      totalIncome: sql<string>`
+        coalesce(sum(case when ${categories.type} = 'income' then ${transactions.amount} else 0 end), 0)
+      `,
+      totalExpense: sql<string>`
+        coalesce(sum(case when ${categories.type} = 'expense' then ${transactions.amount} else 0 end), 0)
+      `,
+      monthIncome: sql<string>`
+        coalesce(sum(case when ${categories.type} = 'income' and ${transactions.transactionDate} >= ${startOfMonth} and ${transactions.transactionDate} < ${startOfNextMonth} then ${transactions.amount} else 0 end), 0)
+      `,
+      monthExpense: sql<string>`
+        coalesce(sum(case when ${categories.type} = 'expense' and ${transactions.transactionDate} >= ${startOfMonth} and ${transactions.transactionDate} < ${startOfNextMonth} then ${transactions.amount} else 0 end), 0)
+      `,
+    })
+    .from(transactions)
+    .innerJoin(categories, eq(transactions.categoryId, categories.id))
+    .where(eq(transactions.userId, user.id));
+
+  const totalBalance =
+    Number(summary.totalIncome) - Number(summary.totalExpense);
+
+  return {
+    totalBalance,
+    monthIncome: Number(summary.monthIncome),
+    monthExpense: Number(summary.monthExpense),
+  };
 }
 
 export async function createTransaction(

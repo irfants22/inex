@@ -12,7 +12,7 @@ export default function BudgetTrackerCard({
   monthlyLimit: number;
   transactions: TransactionData[] | null;
 }) {
-  const totalExpense = useMemo(() => {
+  const monthlyExpense = useMemo(() => {
     return (transactions ?? []).reduce(
       (acc, trx) => acc + Number(trx.amount),
       0,
@@ -22,16 +22,16 @@ export default function BudgetTrackerCard({
   const progress = useMemo(() => {
     if (monthlyLimit <= 0) return 0;
 
-    const expense = totalExpense ?? 0;
+    const expense = monthlyExpense ?? 0;
     return Math.min((expense / monthlyLimit) * 100, 100);
-  }, [totalExpense, monthlyLimit]);
+  }, [monthlyExpense, monthlyLimit]);
 
   const currentMonth = new Intl.DateTimeFormat("en-US", {
     month: "long",
     year: "numeric",
   }).format(new Date());
 
-  const isOverLimit = totalExpense > monthlyLimit;
+  const isOverLimit = monthlyExpense > monthlyLimit;
 
   return (
     <div className="w-full px-4 py-2">
@@ -44,9 +44,9 @@ export default function BudgetTrackerCard({
             {currentMonth}
           </p>
         </div>
-        <p className="text-4xl font-semibold tracking-wide text-emerald-500">{`Rp ${totalExpense.toLocaleString("id-ID")}`}</p>
+        <p className="text-4xl font-semibold tracking-wide text-emerald-500">{`Rp ${monthlyExpense.toLocaleString("id-ID")}`}</p>
         {isOverLimit && (
-          <p className="text-sm font-medium text-red-500">{`Rp ${(totalExpense - monthlyLimit).toLocaleString("id-ID")} over your Rp ${monthlyLimit.toLocaleString("id-ID")} limit`}</p>
+          <p className="text-sm font-medium text-red-500">{`Rp ${(monthlyExpense - monthlyLimit).toLocaleString("id-ID")} over your Rp ${monthlyLimit.toLocaleString("id-ID")} limit`}</p>
         )}
         <div className="mt-4 flex w-full flex-col gap-1.5">
           <Progress
@@ -65,7 +65,7 @@ export default function BudgetTrackerCard({
         <div className="mt-3 flex w-full items-start gap-2 rounded-md bg-red-300/80 p-3">
           <TriangleAlert size={18} className="text-red-500" />
           <p className="text-sm font-medium text-red-500">
-            {`You've exceeded your monthly budget by Rp ${(totalExpense - monthlyLimit).toLocaleString("id-ID")}`}
+            You have exceeded your monthly spending limit.
           </p>
         </div>
       )}

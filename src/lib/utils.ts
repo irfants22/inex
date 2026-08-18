@@ -27,3 +27,11 @@ export function calculateNextRun(
 export function parseToDateFormat(date: Date): string {
   return format(date, "yyyy-MM-dd");
 }
+
+export function formatToIDR(value: number): string {
+  return new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  }).format(value);
+}
