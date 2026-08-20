@@ -5,7 +5,6 @@ import {
   Coins,
   HandCoins,
   House,
-  User,
 } from "lucide-react";
 
 export const NAVIGATION_LIST = [
@@ -15,5 +14,5 @@ export const NAVIGATION_LIST = [
   { name: "Recurring", href: "/recurring-transactions", icon: CalendarSync },
   { name: "Categories", href: "/categories", icon: Blocks },
   { name: "Budget", href: "/budget", icon: Coins },
-  { name: "Profile", href: "/profile", icon: User },
+  // { name: "Profile", href: "/profile", icon: User },
 ];
